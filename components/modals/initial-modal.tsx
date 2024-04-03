@@ -1,5 +1,8 @@
 "use client";
 
+import axios from "axios"
+import { useRouter } from "next/navigation";
+
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
@@ -18,7 +21,6 @@ import {
 import { 
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormLabel,
     FormItem,
@@ -41,6 +43,8 @@ const formSchema = z.object({
 export function InitialModal() {
     const [isMounted, setIsMounted] = useState(false);
 
+    const router = useRouter();
+
     useEffect(() => {
         setIsMounted(true)
     }, [])
@@ -56,7 +60,16 @@ export function InitialModal() {
     const isLoading = form.formState.isSubmitting;
 
     async function onSubmit(values: z.infer<typeof formSchema>){
-        console.log(values);
+        try {
+            await axios.post("/api/servers", values);
+            
+            form.reset();
+            router.refresh();
+            window.location.reload();
+            
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     if (!isMounted) {
@@ -65,7 +78,7 @@ export function InitialModal() {
 
     return (
         <Dialog open={true}>
-            <DialogContent className=" bg-white text-black p-0 overflow-hidden">
+            <DialogContent className="dark:bg-neutral-900 p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
                         Prsonaliza tu server 
@@ -105,8 +118,7 @@ export function InitialModal() {
                                     <FormItem>
                                         <FormLabel
                                             className="uppercase text-xs font-bolt text-zinc-500
-                                            dark:text-secondary/70"
-                                        >
+                                            dark:text-neutral-500"                                        >
                                             Nombre del server
                                         </FormLabel>
                                         <FormControl>
@@ -122,7 +134,7 @@ export function InitialModal() {
                                 )}
                             />
                         </div>
-                        <DialogFooter className="bg-gray-100 px-6 py-4">
+                        <DialogFooter className="bg-gray-100 dark:bg-neutral-950 px-6 py-4">
                             <Button 
                                 variant="primary" 
                                 disabled={isLoading}

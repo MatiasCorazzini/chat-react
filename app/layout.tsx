@@ -20,6 +20,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
+        <head>
+          <link rel="icon" href="/favicon.ico" />
+        </head>
         <body className={cn(
           font.className,
           "bg-white dark:bg-[#313338]"
@@ -28,7 +31,7 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="dark"
             enableSystem={false}
-            storageKey="discord-theme"
+            storageKey="chat-theme"
           >
             {children}
           </ThemeProvider>          

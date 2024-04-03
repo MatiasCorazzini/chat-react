@@ -6,6 +6,7 @@ import Image from "next/image";
 import { UploadDropzone } from "@uploadthing/react";
 
 import "@uploadthing/react/styles.css"
+import { ReactNode } from "react";
 
 interface FileUploadProps {
     onChange: (url?: string) => void;
