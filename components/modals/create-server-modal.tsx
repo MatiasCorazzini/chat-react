@@ -7,8 +7,6 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
 
-import { useState, useEffect } from "react";
-
 import {
     Dialog,
     DialogContent,
@@ -30,6 +28,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FileUpload } from "../file-upload";
+import { useModal } from "@/hooks/use-modal-store";
  
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -40,14 +39,11 @@ const formSchema = z.object({
     })
 })
 
-export function InitialModal() {
-    const [isMounted, setIsMounted] = useState(false);
-
+export function CreateServerModal() {
+    const { isOpen, onClose, type } = useModal();
     const router = useRouter();
 
-    useEffect(() => {
-        setIsMounted(true)
-    }, [])
+    const isModalOpen = isOpen && type === "createServer"
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -65,19 +61,20 @@ export function InitialModal() {
             
             form.reset();
             router.refresh();
-            window.location.reload();
+            onClose();
             
         } catch (error) {
             console.log(error);
         }
     }
 
-    if (!isMounted) {
-        return null;
+    const handleClose = () => {
+        form.reset();
+        onClose();
     }
 
     return (
-        <Dialog open={true}>
+        <Dialog open={isModalOpen} onOpenChange={handleClose}>
             <DialogContent className="dark:bg-neutral-900 p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
